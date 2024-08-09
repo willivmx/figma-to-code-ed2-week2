@@ -1,113 +1,208 @@
+"use client";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
+import Button from "@/components/button";
+import ProductCard from "@/components/product-card";
+import { categories, getProducts } from "@/models/products";
 
-export default function Home() {
+export default function Page() {
+  const [products, setProducts] = useState<Products>([]);
+
+  const handleGetProducts = async () => {
+    const dbProducts = await getProducts();
+    setProducts(dbProducts);
+  };
+
+  useEffect(() => {
+    handleGetProducts();
+  }, []);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
+    <div className={"flex flex-col w-full py-10 md:py-20"}>
+      <div
+        className={cn(
+          "w-full rounded-[52px] py-[42px] px-[22px] md:py-24 md:px-[78px] flex flex-col gap-[42px] mb-[72px]",
+          `bg-[url('/assets/vectors/images/jordan-essentials-chicago-mens-jacket-N0ch5l.svg')] bg-center bg-cover bg-no-repeat`,
+        )}
+      >
+        <div
+          className={
+            "flex flex-col gap-2.5 text-b-white text-center leading-6 tracking-tighter"
+          }
+        >
+          <div className={"flex justify-center items-center gap-3"}>
+            <span className={"border-b border-b-white w-[66px]"} />
+            <span className={"text-[10px] md:text-sm"}>
+              We bring new fashion to the world
+            </span>
+            <span className={"border-b border-b-white w-[66px]"} />
+          </div>
+          <div className={"flex flex-col justify-center items-center gap-4"}>
+            <div
+              className={
+                "font-[Chillax-Bold] text-3xl md:text-5xl text-b-white text-center md:leading-[60px] lg:px-12"
+              }
+            >
+              DISCOVER THE LATEST FASHION TRENDS HERE
+            </div>
+            <div className={"w-full md:w-[557px] text-xs md:text-base"}>
+              Discover a world of fashion with our meticulously curated outfits.
+              Shop now to update your wardrobe with chic and stylish outfits.
+            </div>
+          </div>
+        </div>
+        <div className={"flex justify-center items-center -gap-px"}>
+          <Button className={""}>Start shopping</Button>
+          <Button className={"p-3.5"}>
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+              src={"/assets/vectors/icons/arrow.svg"}
+              alt={"arrow-right"}
+              width={20}
+              height={20}
+              quality={100}
+              className={"size-5"}
             />
-          </a>
+          </Button>
         </div>
       </div>
+      <div className={"flex flex-col justify-center items-center gap-[72px]"}>
+        <span
+          className={
+            "font-[Chillax-SemiBold] text-xl md:text-2xl lg:text-3xl text-center w-full"
+          }
+        >
+          Discover the latest trends in summer fashion. Shop now and refresh
+          your wardrobe with our stylish summer shirts.
+        </span>
+        <div
+          className={"flex flex-col justify-center items-center gap-9 w-full"}
+        >
+          <div
+            className={
+              "w-full flex flex-wrap md:justify-center md:items-center gap-2.5"
+            }
+          >
+            {categories.map((category, index) => (
+              <Button
+                key={category.id}
+                className={cn(
+                  "px-3.5 py-2 gap-2",
+                  index === 0
+                    ? "bg-b-black text-b-white"
+                    : "border border-b-black",
+                )}
+              >
+                <span className={"text-xl"}>{category.label}</span>
+                <span className={"text-base"}>{category.count}</span>
+              </Button>
+            ))}
+          </div>
+          <div
+            className={
+              "lg:w-10/12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5"
+            }
+          >
+            {products.slice(0, 6).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          <div className={"w-full flex justify-center items-center"}>
+            <Button className={"bg-transparent border border-b-black"}>
+              View More
+            </Button>
+          </div>
+        </div>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+        <div
+          className={
+            "flex flex-col justify-center items-center gap-9 lg:px-[102px]"
+          }
+        >
+          <div className={"flex flex-col justify-center items-center gap-1"}>
+            <span className={"font-[Chillax-SemiBold] leading-10 text-4xl"}>
+              OUR COLLECTION
+            </span>
+            <span
+              className={
+                "font-medium text-lg text-b-dark-gray tracking-tighter"
+              }
+            >
+              Our latest collection, where classic and contemporary styles
+              converge in perfect harmony.
+            </span>
+          </div>
+          <div
+            className={
+              "grid grid-rows-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full md:h-[446px] overflow-hidden"
+            }
+          >
+            <div
+              className={"rounded-[52px] size-full overflow-hidden relative"}
+            >
+              <Image
+                src={
+                  "/assets/vectors/images/tech-mens-fleece-shacket-W5pmdx.svg"
+                }
+                alt={"tech-mens-fleece-shacket-W5pmdx"}
+                width={1728}
+                height={2160}
+                quality={100}
+                className={"size-full object-cover"}
+              />
+              <div
+                className={
+                  "absolute bottom-0 left-0 w-full flex justify-center items-center pb-6"
+                }
+              >
+                <Button>
+                  <span>Learn more</span>
+                  <Image
+                    src={"/assets/vectors/icons/arrow.svg"}
+                    alt={"arrow-right"}
+                    width={20}
+                    height={20}
+                    quality={100}
+                    className={"size-5"}
+                  />
+                </Button>
+              </div>
+            </div>
+            <div
+              className={
+                "lg:col-span-2 size-full rounded-[52px] overflow-hidden relative gap-2.5"
+              }
+            >
+              <Image
+                src={
+                  "/assets/vectors/images/abraham-george-wwVtHt5Px18-unsplash.svg"
+                }
+                alt={"tech-mens-fleece-shacket-W5pmdx"}
+                width={640}
+                height={800}
+                quality={100}
+                className={"size-full object-cover"}
+              />
+              <div
+                className={
+                  "absolute top-0 left-0 size-full flex flex-col justify-center items-center gap-1 p-5 text-b-white text-center bg-b-black/20"
+                }
+              >
+                <span
+                  className={
+                    "font-[Chillax-Bold] md:text-3xl lg:text-5xl leading-[60px] text-transparent text-stroke text-stroke-b-white"
+                  }
+                >
+                  CLASSIC MEN
+                </span>
+                <span className={"md:text-sm lg:text-lg"}>
+                  We&apos;re changing the way things get made
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
