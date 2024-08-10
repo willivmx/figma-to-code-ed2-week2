@@ -201,14 +201,27 @@ const HamburgerMenu = () => {
         }
         onClick={toggleMenu}
       >
-        <Image
-          src={"/assets/vectors/icons/hamburger.svg"}
-          alt={"icon"}
-          width={20}
-          height={20}
-          quality={100}
-          className={"size-full"}
-        />
+        {isOpen ? (
+          <Image
+            src={"/assets/vectors/icons/time.svg"}
+            alt={"icon"}
+            width={20}
+            height={20}
+            quality={100}
+            className={
+              "size-full"
+            }
+          />
+        ) : (
+          <Image
+            src={"/assets/vectors/icons/hamburger.svg"}
+            alt={"icon"}
+            width={20}
+            height={20}
+            quality={100}
+            className={"size-full"}
+          />
+        )}
       </div>
       <div
         className={cn(
