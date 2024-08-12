@@ -5,6 +5,7 @@ import Button from "@/components/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/hooks/useCart";
 
 const ProductCard = ({
   product,
@@ -14,6 +15,13 @@ const ProductCard = ({
   className?: string;
 }) => {
   const router = useRouter();
+  const { addItem, isInCart } = useCart();
+  const handleAddToCart = (product: Product) => {
+    addItem(product, {
+      sizes: [product.variants.sizes[0]],
+      colors: [product.variants.colors[0]],
+    });
+  };
   return (
     <div className={cn("w-full flex flex-col gap-4 cursor-pointer", className)}>
       <div
@@ -41,25 +49,37 @@ const ProductCard = ({
             "absolute left-0 w-full grid grid-cols-2 gap-1 opacity-0 bottom-0 group-hover:opacity-100 transition-all p-5 text-xs lg:text-base"
           }
         >
-          <Button
-            className={"px-5 py-3 gap-1.5 w-full"}
-            onClick={() => router.push(`/details/${product.id.split('/')[4]}`)}
-          >
-            <Image
-              src={"/assets/vectors/icons/cart.svg"}
-              alt={"cart"}
-              width={20}
-              height={20}
-              quality={100}
-              className={"size-5"}
-            />
-            <span className={"font-semibold text-nowrap"}>ADD TO CART</span>
-          </Button>
+          {isInCart(product) ? (
+            <Button
+              className={"px-5 py-3 gap-1.5 w-full"}
+              onClick={() => router.push(`/cart`)}
+            >
+              <span className={"font-semibold text-nowrap"}>VIEW CART</span>
+            </Button>
+          ) : (
+            <Button
+              className={"px-5 py-3 gap-1.5 w-full"}
+              onClick={() => handleAddToCart(product)}
+            >
+              <Image
+                src={"/assets/vectors/icons/cart.svg"}
+                alt={"cart"}
+                width={20}
+                height={20}
+                quality={100}
+                className={"size-5"}
+              />
+              <span className={"font-semibold text-nowrap"}>ADD TO CART</span>
+            </Button>
+          )}
           <Button
             className={
               "px-5 py-3 bg-transparent border border-b-white text-b-white w-full"
             }
-            onClick={() => router.push(`/details/${product.id.split('/')[4]}`)}
+            onClick={() => {
+              if (!isInCart(product)) handleAddToCart(product);
+              router.push("/checkout");
+            }}
           >
             BUY NOW
           </Button>
@@ -67,7 +87,7 @@ const ProductCard = ({
       </div>
       <div className={"flex flex-col gap-0.5"}>
         <Link
-          href={`/details/${product.id.split('/')[4]}`}
+          href={`/details/${product.id.split("/")[4]}`}
           className={"font-semibold text-2xl lg:text-3xl"}
         >
           {product.name}

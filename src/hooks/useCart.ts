@@ -118,8 +118,18 @@ export const useCart = () => {
     syncCart(newCart);
   };
 
-  if (_cart === null)
-    return { cart: emptyCart, addItem, removeItem, clearCart, updateQuantity };
+  const isInCart = (product: Product) => {
+    if (!_cart) return false;
 
-  return { cart: _cart, addItem, removeItem, clearCart, updateQuantity };
+    return _cart.items.some((item) => item.product.id === product.id);
+  };
+
+  return {
+    cart: !_cart ? emptyCart : _cart,
+    addItem,
+    removeItem,
+    clearCart,
+    updateQuantity,
+    isInCart,
+  };
 };

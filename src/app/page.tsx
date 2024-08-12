@@ -19,7 +19,7 @@ export default function Page() {
   }, []);
 
   return (
-    <div className={"flex flex-col w-full py-10 md:py-20"}>
+    <div className={"flex flex-col w-full pb-10 md:pb-20"}>
       <div
         className={cn(
           "w-full rounded-[52px] py-[42px] px-[22px] md:py-24 md:px-[78px] flex flex-col gap-[42px] mb-[72px]",
